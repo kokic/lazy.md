@@ -1,12 +1,12 @@
 ///|
 async fn main {
   let matches = @argparse.Command(
-    "lazy",
-    about="Print the titles of a Markdown file, or the content of one title.",
+    "lazy.md",
+    about="Print the titles of a lazy Markdown file, or the content of one title.",
     positionals=[
       @argparse.PositionArg(
         "file",
-        about="Markdown file to read",
+        about="lazy Markdown file to read",
         num_args=@argparse.ValueRange(lower=1, upper=1),
       ),
       @argparse.PositionArg(
