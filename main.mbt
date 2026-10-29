@@ -28,7 +28,7 @@ async fn main {
   let document = parse_document(text)
   if titles.is_empty() {
     @stdio.stdout.write(document.preamble)
-    @stdio.stdout.write(document.sections.keys().join(", "))
+    @stdio.stdout.write("titles: \{document.sections.keys().join(", ")}")
   } else {
     let contents : Array[String] = []
     let missing_titles : Array[String] = []
