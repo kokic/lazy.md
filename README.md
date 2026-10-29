@@ -2,13 +2,13 @@
 
 First, place the executable in a directory on your `PATH` and make sure `lazy.md --help` works.
 
-## Write your own lazy.md file
+## 2/3 Write your own lazy.md file
 
 [An example file](./default.lazy.md)
 
 Use only level-three headings (`###`) to divide the content into sections. Don't worry about longer `*.lazy.md` files increasing baseline context usage: the content under each heading is read only when needed.
 
-## Append to the system prompt
+## 3/3 Append to the system prompt
 
 If you use PI, edit `~/.pi/agent/APPEND_SYSTEM.md` and add the following:
 
