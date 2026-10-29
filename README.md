@@ -10,7 +10,7 @@ Use only level-three headings (`###`) to divide the content into sections. Don't
 
 ### `3/3` Append to the system prompt
 
-If you use PI, edit `~/.pi/agent/APPEND_SYSTEM.md` and add the following:
+If you use [PI](https://pi.dev/), edit `~/.pi/agent/APPEND_SYSTEM.md` and add the following:
 
 ```
 Upon reading this message, immediately run `lazy.md ~/lazy.md` to display the available titles; then, depending on your task, execute `lazy.md ~/lazy.md [title1] [title2] ...` to access the specific instructions you need to follow.
