@@ -2,7 +2,7 @@
 async fn main {
   let matches = @argparse.Command(
     "lazy.md",
-    about="print the titles of a lazy markdown file, or the content of one title.",
+    about="print the titles of a lazy markdown file, or the content of one or more titles.",
     positionals=[
       @argparse.PositionArg(
         "file",
@@ -12,7 +12,7 @@ async fn main {
       @argparse.PositionArg(
         "title",
         about="title whose content to print",
-        num_args=@argparse.ValueRange(lower=0, upper=1),
+        num_args=@argparse.ValueRange(lower=0),
         allow_hyphen_values=true,
       ),
     ],
@@ -21,24 +21,25 @@ async fn main {
     Some([path, ..]) => path
     _ => abort("lazy: missing file path")
   }
-  let title = match matches.values.get("title") {
-    Some([title, ..]) => Some(title)
-    _ => None
-  }
+  let titles = matches.values.get("title").unwrap_or([])
   let text = @fs.read_file(path).text() catch {
     err => raise LazyError::ReadFailed(path~, reason="\{err}")
   }
   let document = parse_document(text)
-  match title {
-    Some(title) =>
-      match document.sections.get(title) {
-        Some(content) => @stdio.stdout.write(content)
-        None => raise LazyError::TitleNotFound(title~)
+  if titles.is_empty() {
+    @stdio.stdout.write(document.preamble)
+    @stdio.stdout.write(document.sections.keys().join(", "))
+  } else {
+    for title in titles {
+      guard document.sections.contains(title) else {
+        raise LazyError::TitleNotFound(title~)
       }
-    None => {
-      @stdio.stdout.write(document.preamble)
-      for title in document.sections.keys() {
-        @stdio.stdout.write("\{title}\n")
+    }
+    for i, title in titles {
+      let content = document.sections.get(title).unwrap()
+      @stdio.stdout.write(content)
+      if i + 1 < titles.length() && !content.has_suffix("\n") {
+        @stdio.stdout.write("\n")
       }
     }
   }
