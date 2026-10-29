@@ -30,17 +30,24 @@ async fn main {
     @stdio.stdout.write(document.preamble)
     @stdio.stdout.write(document.sections.keys().join(", "))
   } else {
+    let contents : Array[String] = []
+    let missing_titles : Array[String] = []
     for title in titles {
-      guard document.sections.contains(title) else {
-        raise LazyError::TitleNotFound(title~)
-      }
+      document.sections
+      .get(title)
+      .map_or_else(
+        () => if !missing_titles.contains(title) { missing_titles.push(title) },
+        content => contents.push(content),
+      )
     }
-    for i, title in titles {
-      let content = document.sections.get(title).unwrap()
+    for i, content in contents {
       @stdio.stdout.write(content)
-      if i + 1 < titles.length() && !content.has_suffix("\n") {
+      if i + 1 < contents.length() && !content.has_suffix("\n") {
         @stdio.stdout.write("\n")
       }
+    }
+    if !missing_titles.is_empty() {
+      raise LazyError::TitlesNotFound(titles=missing_titles)
     }
   }
 }
@@ -69,13 +76,14 @@ fn parse_document(text : StringView) -> Document {
 ///|
 suberror LazyError {
   ReadFailed(path~ : String, reason~ : String)
-  TitleNotFound(title~ : String)
+  TitlesNotFound(titles~ : Array[String])
 }
 
 ///|
 impl Show for LazyError with fn output(self, logger) {
   match self {
     ReadFailed(path~, reason~) => logger <+ "lazy: \{path}: \{reason}"
-    TitleNotFound(title~) => logger <+ "lazy: title not found: \{title}"
+    TitlesNotFound(titles~) =>
+      logger <+ "lazy: titles not found: \{titles.join(", ")}"
   }
 }
