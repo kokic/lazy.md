@@ -1,6 +1,6 @@
 # Installation
 
-First, place the executable in a directory on your `PATH` and make sure `lazy.md --help` works.
+First, place the [executable](https://github.com/kokic/lazy.md/releases) in a directory on your `PATH` and make sure `lazy.md --help` works.
 
 ## 2/3 Write your own lazy.md file
 
